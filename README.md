@@ -99,7 +99,8 @@ Author
 [Barry Allwood](https://github.com/ballwood)
 
 This project is completely inspired by and borrows heavily from the 
-[chromedriver](https://github.com/giggio/node-chromedriver)project (even the readme, lol). 
+[chromedriver](https://github.com/giggio/node-chromedriver) project (even the readme)
+and [sauce-connect-launcher](https://github.com/bermi/sauce-connect-launcher) project. 
 
 The reason for creating it was I'm working in an enterprise environment and I wanted a 
 simple way to grab sauce connect from a local nexus repository on npm install. 
