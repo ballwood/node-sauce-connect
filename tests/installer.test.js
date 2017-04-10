@@ -5,7 +5,7 @@ var expect = chai.expect;
 var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
 var Promise = require('yaku');
-var packageJson = require('../package.json');
+var version = require('../version');
 chai.use(sinonChai);
 
 describe('installer.js', function () {
@@ -45,7 +45,7 @@ describe('installer.js', function () {
 
       promise = installer.install(cdn, platform, arch);
 
-      expect(getDownloadFilenameStub).to.have.been.calledWith(platform, arch, packageJson.version);
+      expect(getDownloadFilenameStub).to.have.been.calledWith(platform, arch, version);
 
       getDownloadFilenameStub.restore();
 
