@@ -1,7 +1,7 @@
 var lib = require('../lib/lib');
 var sauceConnect = require('../lib/sauceconnect');
 var expect = require('chai').expect;
-var packageJson = require('../package.json');
+var version = require('../version');
 var path = require('path');
 var childProcess = require('child_process');
 var chai = require('chai');
@@ -23,8 +23,8 @@ describe('sauceconnect.js', function () {
 
   describe('version', function () {
 
-    it('should return the version described in package.json', function () {
-      expect(sauceConnect.version).to.equal(packageJson.version);
+    it('should return the version described in version.js', function () {
+      expect(sauceConnect.version).to.equal(version);
     });
 
   });
