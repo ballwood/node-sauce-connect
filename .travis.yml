@@ -1,0 +1,27 @@
+sudo: true
+language: node_js
+node_js:
+- '4'
+- '5'
+- '6'
+- '7'
+os:
+- linux
+- osx
+addons:
+  apt:
+    packages:
+    - libc6-i386
+    - lib32stdc++6
+    - zlib1g:i386
+install: ''
+script:
+- npm install --ignore-scripts
+- npm run lint
+- node install.js
+- ./test.sh
+- ./test32.sh
+env:
+  global:
+  - secure: rriEkfYzHxGmvHCjHluUwayDbBMP8xnSoWUjycdtBUn7EUnP/xxc2DNDhPo5NZylPQ3Hqab8JvyqJBwoHJSMoXSHvJSJAhzUF5a0XyaWV7CKH08SaNekyQQnRyuNq7KulyNYuhE7OrJkdX8O5QMiu9L7x7j6lbiMEukzaCWNfBxsdhAc+ZMMV/nCUHS4iDH7Ob2jGzM0qqgwXHpuEAlPClvAK3wYqyjQqhrSjVMqJ3gjeVYbTstTDHMJsW0P83LWHatuGQWYrWD2/0Jqn7r24f5pAsP+/Y3cSKa3CZiyAAm4p9r1GkhqMvINmFt30iv2ja6Ymp89o4VueOURiR6b0nCNxSgAdr39TN//f4XH1WbXT0IBHQcyLJe2NcmcI0ynY1plksPnrERHlh8wKw+4sNo21/POFX0aa3gfbiLtl8mJ4w+MzCbJ/kabvpkxo3LH9LP0IAKPY/6Zw8Zrx5FNXVhtYYSC5YviGspVJkbFDkd51cQk0U56xt+L5HW08to3uYyX1MfNIyYQ1OK6RZxFD4ShY+4HO9mDbaUfqTUqKG14YK0ZRFKG5S3R+AeV/ftnNYssG08XrPILF5FvP2wDSZQ8zOa1VGlzB7PUOt2jl/qYzu0fqvfCykdxbMkTDj7Z6l8bhlT8SaoQMYtTfyvjdqSybSCU2h2Dc9nBV/I0D4c=
+  - secure: eUTPqpgi2K+atCkm4qicDj6Uglo2SCTsGexENXwO5KBJD56pK1rumDHhiOdZPd3bRpxyqnVXIPxxRdRx8R1aZMi2CcrPUPY5zYLI2ZeITu3naIauHNNRasX7aFvtm7ISReR2oR5i5sZy8gdPIstVPcZgW69AIvOycmb8JttoSL9AiPe5s5YgU/ps2LICF/Iq5ZoTHy9zGbYzIJtIXdRjKZchCqiNK7pFydWUxxzIUmc8jhNR32xT4YbFXL+zzRKnlg1SlFj3x+YSedPU2VTH0engfPzS1RTkWoqDjn8fqx6y2ZaZgKWtCRYIKFwcCJKMXlI9rZxm1WHxKNz6cU+fzyLgTyBcbjExdOxxEFvI2g6y/uo3Tbyy3KWot8WVlDZYiinX/69jd6Bhq6RZFJn2CeC+a47ldDdSbmXhQKmqWMuR3vzQxiVgek/+d9wz8suSn7QPAcXa7kPihKrjTU+ucl25iMYbLfETlHsk8tEPi+8hfiFKCqG+A6hqX+uLNptDJNjfiokNnPqGtaKF0QnMX3Fs7MGn5fDb8zqE0kJYfkGmElV9cdfVAkOBAmIf1BYcb7EQ0HmCRg/k/1tDZ1bpW/nVTJiGiX2TnXeHiu1nfsKr71ExJdpxwH0lN+OoZlM8KIagZZMZFzq204XMgaQsonZu4qpYUT1XkKYrDe50lyA=

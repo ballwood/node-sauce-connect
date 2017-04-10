@@ -1,0 +1,18 @@
+{
+  "env": {
+    "mocha": true,
+    "node": true
+  },
+  "extends": "airbnb/legacy",
+  "plugins": [
+    "chai-friendly"
+  ],
+  "rules": {
+    "padded-blocks": "off",
+    "func-names": "off",
+    "no-console": "off",
+    "no-unused-expressions": "off",
+    "no-underscore-dangle": "off",
+    "chai-friendly/no-unused-expressions": "error"
+  }
+}
