@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/ballwood/node-sauce-connect.svg?branch=master)](https://travis-ci.org/ballwood/node-sauce-connect)
-[![Build status](https://ci.appveyor.com/api/projects/status/nmtio1a01a4cluvr?svg=true)](https://ci.appveyor.com/project/ballwood/node-sauce-connect)
+[![Build status](https://ci.appveyor.com/api/projects/status/x11q4sv1haoubo1b?svg=true)](https://ci.appveyor.com/project/ballwood/node-sauce-connect)
 [![npm](https://img.shields.io/npm/dt/node-sauce-connect.svg)](https://www.npmjs.com/package/node-sauce-connect)
 
 # Node Sauce Connect
