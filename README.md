@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/ballwood/node-sauce-connect.svg?branch=master)](https://travis-ci.org/ballwood/node-sauce-connect)
-[![Build status](https://ci.appveyor.com/api/projects/status/x11q4sv1haoubo1b?svg=true)](https://ci.appveyor.com/project/ballwood/node-sauce-connect)
+[![Build status](https://ci.appveyor.com/api/projects/status/x11q4sv1haoubo1b/branch/master?svg=true)](https://ci.appveyor.com/project/ballwood/node-sauce-connect)
 [![npm](https://img.shields.io/npm/dt/node-sauce-connect.svg)](https://www.npmjs.com/package/node-sauce-connect)
+[![npm version](https://badge.fury.io/js/node-sauce-connect.svg)](https://badge.fury.io/js/node-sauce-connect)
 
 # Node Sauce Connect
 
@@ -8,6 +9,11 @@ Note
 -----------------------
 This package is currently in beta status...use at your own peril! I plan to upgrade the CI
 tests some more soon so I can prove everything runs correctly (proxies etc).
+
+The reason for creating it was I'm working in an enterprise environment and I wanted a 
+simple way to grab sauce connect from a local nexus repository on npm install. 
+sauce-connect-launcher does this but felt extremely heavyweight and there was no 
+way to specify where to download from.
 
 Installing
 -----------------------
@@ -101,11 +107,6 @@ Author
 This project is completely inspired by and borrows heavily from the 
 [chromedriver](https://github.com/giggio/node-chromedriver) project (even the readme)
 and [sauce-connect-launcher](https://github.com/bermi/sauce-connect-launcher) project. 
-
-The reason for creating it was I'm working in an enterprise environment and I wanted a 
-simple way to grab sauce connect from a local nexus repository on npm install. 
-sauce-connect-launcher does this but felt extremely heavyweight and there was no 
-way to specify where to download from.
 
 License
 -------
