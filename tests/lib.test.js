@@ -17,6 +17,34 @@ describe('lib.js', function () {
   var fakeZipPath = path.join(fakePath, fakeZipFilename);
   var fakeTarGzPath = path.join(fakePath, fakeTarGzFilename);
 
+  describe('obfuscateAuthInUri', function () {
+
+    it('should handle a blank uri', function () {
+
+      var result = lib.obfuscateAuthInUri('');
+
+      expect(result).to.equal('');
+
+    });
+
+    it('should obfuscate auth in uri correctly', function () {
+
+      var result = lib.obfuscateAuthInUri('http://xxx:yyy@google.com/');
+
+      expect(result).to.equal('http://****:****@google.com/');
+
+    });
+
+    it('should not touch a uri without auth', function () {
+
+      var result = lib.obfuscateAuthInUri('http://google.com/');
+
+      expect(result).to.equal('http://google.com/');
+
+    });
+
+  });
+
   describe('getDownloadArch', function () {
 
     describe('when platform is linux', function () {
@@ -143,10 +171,12 @@ describe('lib.js', function () {
 
   describe('createTmpDir', function () {
     var tmpDir = path.join(os.tmpdir(), 'sauceconnect');
+    var loggerStub;
     var ensureDirStub;
 
     beforeEach(function () {
       ensureDirStub = sinon.stub(fs, 'ensureDir');
+      loggerStub = sinon.stub();
     });
 
     afterEach(function () {
@@ -155,7 +185,7 @@ describe('lib.js', function () {
 
     it('should create sauceconnect in the temp directory', function () {
 
-      lib.createTmpDir();
+      lib.createTmpDir(loggerStub);
 
       expect(ensureDirStub).to.have.been.calledWith(tmpDir, sinon.match.func);
 
@@ -167,7 +197,7 @@ describe('lib.js', function () {
         callback();
       });
 
-      return lib.createTmpDir().then(function (dirName) {
+      return lib.createTmpDir(loggerStub).then(function (dirName) {
         expect(dirName).to.equal(tmpDir);
       }).catch(function () {
         throw new Error('was not supposed to reject');
@@ -181,7 +211,7 @@ describe('lib.js', function () {
         callback('error');
       });
 
-      return lib.createTmpDir().then(function () {
+      return lib.createTmpDir(loggerStub).then(function () {
         throw new Error('was not supposed to resolve');
       }).catch(function (error) {
         expect(error).to.be.a('Error');
@@ -194,6 +224,7 @@ describe('lib.js', function () {
   describe('download', function () {
     var fakeUrl = 'https://www.google.com';
     var requestStub;
+    var loggerStub;
     var fakeRequestStream;
     var fakeFsStream;
 
@@ -206,6 +237,7 @@ describe('lib.js', function () {
       fakeFsStream.write = sinon.stub();
       sinon.stub(fs, 'createWriteStream').returns(fakeFsStream);
       requestStub = sinon.stub().returns(fakeRequestStream);
+      loggerStub = sinon.stub();
     });
 
     afterEach(function () {
@@ -214,7 +246,7 @@ describe('lib.js', function () {
 
     it('should call the request library with the correct url', function () {
 
-      var promise = lib.download(requestStub, fakeUrl, fakeTarGzFilename, fakePath);
+      var promise = lib.download(loggerStub, requestStub, fakeUrl, fakeTarGzFilename, fakePath);
       fakeFsStream.emit('finish');
 
       expect(requestStub).to.have.been.calledWith(fakeUrl);
@@ -225,7 +257,7 @@ describe('lib.js', function () {
 
     it('should reject on http error', function () {
 
-      var promise = lib.download(requestStub, fakeUrl, fakeTarGzFilename, fakePath)
+      var promise = lib.download(loggerStub, requestStub, fakeUrl, fakeTarGzFilename, fakePath)
         .then(function () {
           throw new Error('was not supposed to resolve');
         }).catch(function (error) {
@@ -241,7 +273,7 @@ describe('lib.js', function () {
     it('should pass data from the request response to the file stream', function () {
       var data = 'test';
 
-      var promise = lib.download(requestStub, fakeUrl, fakeTarGzFilename, fakePath)
+      var promise = lib.download(loggerStub, requestStub, fakeUrl, fakeTarGzFilename, fakePath)
         .then(function () {
           throw new Error('was not supposed to resolve');
         }).catch(function (error) {
@@ -259,7 +291,7 @@ describe('lib.js', function () {
 
     it('should reject on writing to filesystem error', function () {
 
-      var promise = lib.download(requestStub, fakeUrl, fakeTarGzFilename, fakePath)
+      var promise = lib.download(loggerStub, requestStub, fakeUrl, fakeTarGzFilename, fakePath)
         .then(function () {
           throw new Error('was not supposed to resolve');
         }).catch(function (error) {
@@ -276,7 +308,7 @@ describe('lib.js', function () {
 
       var expectedOutputPath = path.join(fakePath, fakeTarGzFilename);
 
-      var promise = lib.download(requestStub, fakeUrl, fakeTarGzFilename, fakePath)
+      var promise = lib.download(loggerStub, requestStub, fakeUrl, fakeTarGzFilename, fakePath)
         .then(function (filename) {
           expect(filename).to.equal(expectedOutputPath);
         }).catch(function () {
@@ -294,16 +326,18 @@ describe('lib.js', function () {
 
   describe('extract', function () {
     var decompressStub;
+    var loggerStub;
 
     beforeEach(function () {
       decompressStub = sinon.stub();
+      loggerStub = sinon.stub();
     });
 
     it('should reject if it cannot decompress the archive', function () {
 
       decompressStub.returns(Promise.reject('Error'));
 
-      return lib.extract(decompressStub, fakeZipPath).then(function () {
+      return lib.extract(loggerStub, decompressStub, fakeZipPath).then(function () {
         throw new Error('was not supposed to resolve');
       }).catch(function (error) {
         expect(error).to.be.a('Error');
@@ -320,7 +354,7 @@ describe('lib.js', function () {
 
       decompressStub.returns(Promise.resolve(decompressionResult));
 
-      return lib.extract(decompressStub, fakeTarGzPath).then(function (result) {
+      return lib.extract(loggerStub, decompressStub, fakeTarGzPath).then(function (result) {
         expect(result).to.equal(path.join(fakePath, 'sc/bin/sc'));
       }).catch(function () {
         throw new Error('was not supposed to reject');
@@ -332,7 +366,7 @@ describe('lib.js', function () {
 
       decompressStub.returns(Promise.resolve(decompressionResult));
 
-      return lib.extract(decompressStub, fakeZipPath).then(function () {
+      return lib.extract(loggerStub, decompressStub, fakeZipPath).then(function () {
         throw new Error('was not supposed to resolve');
       }).catch(function (error) {
         expect(error).to.be.a('Error');
@@ -354,7 +388,7 @@ describe('lib.js', function () {
 
       decompressStub.returns(Promise.resolve(decompressionResult));
 
-      return lib.extract(decompressStub, fakeZipPath).then(function (result) {
+      return lib.extract(loggerStub, decompressStub, fakeZipPath).then(function (result) {
         expect(result).to.equal(path.join(fakePath, 'sc/bin/sc'));
       }).catch(function () {
         throw new Error('was not supposed to reject');
@@ -366,9 +400,11 @@ describe('lib.js', function () {
   describe('moveToLib', function () {
     var resultLocation = path.normalize(path.join(__dirname, '../lib/sc.zip'));
     var moveStub;
+    var loggerStub;
 
     beforeEach(function () {
       moveStub = sinon.stub(fs, 'move');
+      loggerStub = sinon.stub();
     });
 
     afterEach(function () {
@@ -377,7 +413,7 @@ describe('lib.js', function () {
 
     it('should move the file to the lib directory', function () {
 
-      lib.moveToLib(fakeZipPath);
+      lib.moveToLib(loggerStub, fakeZipPath);
 
       expect(moveStub).to.have.been.calledWith(
         fakeZipPath,
@@ -393,7 +429,7 @@ describe('lib.js', function () {
         callback();
       });
 
-      return lib.moveToLib(fakeZipPath).then(function (dirName) {
+      return lib.moveToLib(loggerStub, fakeZipPath).then(function (dirName) {
         expect(dirName).to.equal(resultLocation);
       }).catch(function () {
         throw new Error('was not supposed to reject');
@@ -407,7 +443,7 @@ describe('lib.js', function () {
         callback('error');
       });
 
-      return lib.moveToLib(fakeZipPath).then(function () {
+      return lib.moveToLib(loggerStub, fakeZipPath).then(function () {
         throw new Error('was not supposed to resolve');
       }).catch(function (error) {
         expect(error).to.be.a('Error');
@@ -420,8 +456,10 @@ describe('lib.js', function () {
   describe('setExecutePermissions', function () {
     var statStub;
     var chmodStub;
+    var loggerStub;
 
     beforeEach(function () {
+      loggerStub = sinon.stub();
       statStub = sinon.stub(fs, 'stat');
       chmodStub = sinon.stub(fs, 'chmod');
     });
@@ -434,7 +472,7 @@ describe('lib.js', function () {
     describe('when the platform is windows', function () {
 
       it('should not set permissions', function () {
-        return lib.setExecutePermissions('win32', fakeZipPath).then(function (result) {
+        return lib.setExecutePermissions(loggerStub, 'win32', fakeZipPath).then(function (result) {
           expect(fs.stat).not.to.have.been.called;
           expect(fs.chmod).not.to.have.been.called;
           expect(result).to.equal(fakeZipPath);
@@ -447,17 +485,13 @@ describe('lib.js', function () {
 
     describe('when the platform is not windows', function () {
 
-      it('should call stat with the correct path', function () {
-
-      });
-
       it('should reject if stat fails', function () {
 
         statStub.callsFake(function (filePath, callback) {
           callback('error');
         });
 
-        return lib.setExecutePermissions('osx', fakeZipPath).then(function () {
+        return lib.setExecutePermissions(loggerStub, 'osx', fakeZipPath).then(function () {
           throw new Error('was not supposed to resolve');
         }).catch(function (error) {
           expect(error).to.be.a('Error');
@@ -475,7 +509,8 @@ describe('lib.js', function () {
           callback(undefined, statResult);
         });
 
-        return lib.setExecutePermissions('osx', fakeZipPath).then(function (filePath) {
+        return lib.setExecutePermissions(loggerStub, 'osx', fakeZipPath).then(function (filePath) {
+          expect(statStub).to.have.been.calledWith(fakeZipPath, sinon.match.func);
           expect(chmodStub).not.to.have.been.called;
           expect(filePath).to.equal(fakeZipPath);
         }).catch(function () {
@@ -498,7 +533,7 @@ describe('lib.js', function () {
           callback();
         });
 
-        return lib.setExecutePermissions('osx', fakeZipPath).then(function (filePath) {
+        return lib.setExecutePermissions(loggerStub, 'osx', fakeZipPath).then(function (filePath) {
           expect(chmodStub).to.have.been.calledWith(filePath, '0755', sinon.match.func);
           expect(filePath).to.equal(fakeZipPath);
         }).catch(function () {
@@ -521,7 +556,7 @@ describe('lib.js', function () {
           callback();
         });
 
-        return lib.setExecutePermissions('osx', fakeZipPath).then(function () {
+        return lib.setExecutePermissions(loggerStub, 'osx', fakeZipPath).then(function () {
           throw new Error('was not supposed to resolve');
         }).catch(function (error) {
           expect(error).to.be.a('Error');
