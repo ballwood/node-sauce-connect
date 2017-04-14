@@ -1,8 +1,14 @@
+#!/usr/bin/env bash
+
 # generate pidfile based on date to prevent locking errors
 PIDFILE=$(date +%s)
 
 # Start Sauce Connect and make it non-blocking with ampersand
-./bin/sc -d ${PIDFILE} &
+if [ -z ${PROXY_PASS} ]; then
+    ./bin/sc -d ${PIDFILE} -w testuser:${PROXY_PASS} &
+else
+    ./bin/sc -d ${PIDFILE} &
+fi
 
 # Keep track of the Sauce Connect Process ID
 TASK_PID=$!

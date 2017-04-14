@@ -37,6 +37,22 @@ Or add property into your [`.npmrc`](https://docs.npmjs.com/files/npmrc) file.
 sauceconnect_cdnurl=https://your.url/sauceconnect
 ```
 
+### Obfuscation of HTTP(S)_PROXY basic auth
+
+On install node-sauce-connect will log out the `HTTP_PROXY` and `HTTPS_PROXY` env vars
+to help in debugging. By default it obfuscates the username and password. If you require
+to see what is being used then 
+
+```shell
+npm install node-sauce-connect --node_sauce_connect_debug=TRUE
+```
+
+Or add property into your [`.npmrc`](https://docs.npmjs.com/files/npmrc) file.
+
+```
+node_sauce_connect_debug=TRUE
+```
+
 Running
 -------
 
@@ -98,6 +114,11 @@ Versioning
 The NPM package version tracks the version of Sauce Connect that will be installed,
 there is also the possibility of an additional number (eg. 4.5.51) that will be used 
 used for revisions to the installer.
+
+Node Version Support
+----------
+
+The package has been tested with latest versions of Node 4, 5, 6 and 7.
 
 Author
 ------
