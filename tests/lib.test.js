@@ -324,6 +324,7 @@ describe('lib.js', function () {
   });
 
   describe('extract', function () {
+    var errorMessage = 'Test error message';
     var decompressStub;
     var loggerStub;
 
@@ -334,12 +335,39 @@ describe('lib.js', function () {
 
     it('should reject if it cannot decompress the archive', function () {
 
-      decompressStub.returns(Promise.reject(new Error('Error')));
+      decompressStub.returns(Promise.reject(new Error(errorMessage)));
 
       return lib.extract(loggerStub, decompressStub, fakeZipPath).then(function () {
         throw new Error('was not supposed to resolve');
       }).catch(function (error) {
         expect(error).to.be.a('Error');
+
+      });
+
+    });
+
+    it('should convert a string to an error if rejected', function () {
+
+      decompressStub.returns(Promise.reject(errorMessage));
+
+      return lib.extract(loggerStub, decompressStub, fakeZipPath).then(function () {
+        throw new Error('was not supposed to resolve');
+      }).catch(function (error) {
+        expect(error).to.be.a('Error');
+        expect(error.message).to.equal(errorMessage);
+      });
+
+    });
+
+    it('should return a generic error message if is not a string or error', function () {
+
+      decompressStub.returns(Promise.reject());
+
+      return lib.extract(loggerStub, decompressStub, fakeZipPath).then(function () {
+        throw new Error('was not supposed to resolve');
+      }).catch(function (error) {
+        expect(error).to.be.a('Error');
+        expect(error.message).to.equal('Unable to extract from ' + fakeZipPath);
       });
 
     });
