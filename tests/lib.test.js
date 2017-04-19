@@ -4,7 +4,6 @@ var fs = require('fs-extra');
 var stream = require('stream');
 var chai = require('chai');
 var expect = chai.expect;
-var os = require('os');
 var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
 var Promise = require('yaku');
@@ -170,7 +169,7 @@ describe('lib.js', function () {
 
 
   describe('createTmpDir', function () {
-    var tmpDir = path.join(os.tmpdir(), 'sauceconnect');
+    var tmpDir = path.resolve(path.join(__dirname, '../lib/sauceconnect'));
     var loggerStub;
     var ensureDirStub;
 
@@ -335,7 +334,7 @@ describe('lib.js', function () {
 
     it('should reject if it cannot decompress the archive', function () {
 
-      decompressStub.returns(Promise.reject('Error'));
+      decompressStub.returns(Promise.reject(new Error('Error')));
 
       return lib.extract(loggerStub, decompressStub, fakeZipPath).then(function () {
         throw new Error('was not supposed to resolve');
