@@ -32,26 +32,26 @@ describe('sauceconnect.js', function () {
   describe('start', function () {
 
     it('should execute the sauce connect executable', function () {
-      sinon.stub(childProcess, 'execFile');
+      sinon.stub(childProcess, 'spawn');
 
       sauceConnect.start();
 
-      expect(childProcess.execFile).to.have.been.calledWith(executablePath);
+      expect(childProcess.spawn).to.have.been.calledWith(executablePath);
 
-      childProcess.execFile.restore();
+      childProcess.spawn.restore();
 
     });
 
     it('should pass any arguments to the sauce connect array', function () {
       var args = ['a', 'b', 'c'];
 
-      sinon.stub(childProcess, 'execFile');
+      sinon.stub(childProcess, 'spawn');
 
       sauceConnect.start(args);
 
-      expect(childProcess.execFile).to.have.been.calledWith(executablePath, args);
+      expect(childProcess.spawn).to.have.been.calledWith(executablePath, args);
 
-      childProcess.execFile.restore();
+      childProcess.spawn.restore();
 
     });
 
@@ -69,14 +69,14 @@ describe('sauceconnect.js', function () {
         kill: sinon.spy()
       };
 
-      sinon.stub(childProcess, 'execFile').returns(mock);
+      sinon.stub(childProcess, 'spawn').returns(mock);
 
       sauceConnect.start();
       sauceConnect.stop();
 
       expect(mock.kill).to.have.been.called;
 
-      childProcess.execFile.restore();
+      childProcess.spawn.restore();
 
     });
 
