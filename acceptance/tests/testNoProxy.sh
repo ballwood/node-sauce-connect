@@ -11,7 +11,7 @@ then
     unset no_proxy
 
     # copy auth conf over
-    sudo cp ./squidNoProxy.conf /etc/squid3/squid.conf
+    sudo cp ../squid-conf/squidNoProxy.conf /etc/squid3/squid.conf
 
     # remove old sauce connect
     rm ./lib/sc
@@ -32,6 +32,6 @@ then
     node install.js
 
     # test
-    ./test.sh
+    test.sh
 
 fi

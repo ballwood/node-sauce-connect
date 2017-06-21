@@ -20,6 +20,6 @@ then
     node install.js
 
     # test
-    ./test.sh
+    test.sh
 
 fi

@@ -23,7 +23,7 @@ script:
 - npm run lint
 - npm run test
 - node install.js
-- ./test.sh && ./testProxy.sh && ./testNoProxy.sh && ./testAuthProxy.sh && ./test32.sh
+- ./acceptance/run.sh && ./testProxy.sh && ./testNoProxy.sh && ./testAuthProxy.sh && ./test32.sh
 env:
   global:
   - secure: rriEkfYzHxGmvHCjHluUwayDbBMP8xnSoWUjycdtBUn7EUnP/xxc2DNDhPo5NZylPQ3Hqab8JvyqJBwoHJSMoXSHvJSJAhzUF5a0XyaWV7CKH08SaNekyQQnRyuNq7KulyNYuhE7OrJkdX8O5QMiu9L7x7j6lbiMEukzaCWNfBxsdhAc+ZMMV/nCUHS4iDH7Ob2jGzM0qqgwXHpuEAlPClvAK3wYqyjQqhrSjVMqJ3gjeVYbTstTDHMJsW0P83LWHatuGQWYrWD2/0Jqn7r24f5pAsP+/Y3cSKa3CZiyAAm4p9r1GkhqMvINmFt30iv2ja6Ymp89o4VueOURiR6b0nCNxSgAdr39TN//f4XH1WbXT0IBHQcyLJe2NcmcI0ynY1plksPnrERHlh8wKw+4sNo21/POFX0aa3gfbiLtl8mJ4w+MzCbJ/kabvpkxo3LH9LP0IAKPY/6Zw8Zrx5FNXVhtYYSC5YviGspVJkbFDkd51cQk0U56xt+L5HW08to3uYyX1MfNIyYQ1OK6RZxFD4ShY+4HO9mDbaUfqTUqKG14YK0ZRFKG5S3R+AeV/ftnNYssG08XrPILF5FvP2wDSZQ8zOa1VGlzB7PUOt2jl/qYzu0fqvfCykdxbMkTDj7Z6l8bhlT8SaoQMYtTfyvjdqSybSCU2h2Dc9nBV/I0D4c=

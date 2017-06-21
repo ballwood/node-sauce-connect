@@ -5,9 +5,9 @@ PIDFILE=$(date +%s)
 
 # Start Sauce Connect and make it non-blocking with ampersand
 if [ -z ${PROXY_PASS} ]; then
-    ./bin/sc -d ${PIDFILE} -w testuser:${PROXY_PASS} &
+    ../../bin/sc -d ${PIDFILE} -w testuser:${PROXY_PASS} &
 else
-    ./bin/sc -d ${PIDFILE} &
+    ../../bin/sc -d ${PIDFILE} &
 fi
 
 # Keep track of the Sauce Connect Process ID

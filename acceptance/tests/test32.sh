@@ -35,7 +35,7 @@ then
     node install.js
 
     # test sc
-    ./test.sh
+    test.sh
 
 fi
 
