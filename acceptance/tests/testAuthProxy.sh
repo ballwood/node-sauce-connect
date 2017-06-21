@@ -11,7 +11,7 @@ then
     unset no_proxy
 
     # copy auth conf over
-    sudo cp ../squid-conf/squidAuth.conf /etc/squid3/squid.conf
+    sudo cp ./acceptance/squid-conf/squidAuth.conf /etc/squid3/squid.conf
 
     # add user
     sudo htpasswd -b -c /etc/squid3/squid_passwd testuser ${PROXY_PASS}

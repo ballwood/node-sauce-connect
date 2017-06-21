@@ -11,7 +11,7 @@ then
     unset no_proxy
 
     # copy auth conf over
-    sudo cp ../squid-conf/squidNoProxy.conf /etc/squid3/squid.conf
+    sudo cp ./acceptance/squid-conf/squidNoProxy.conf /etc/squid3/squid.conf
 
     # remove old sauce connect
     rm ./lib/sc
