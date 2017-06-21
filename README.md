@@ -65,7 +65,8 @@ you can execute by placing the following in your `package.json` file.
 
 ````json
 "scripts": {
-  "sc": "sc"
+  "test": "npm run sc && [test util]"
+  "sc": "sc [arguments]"
 }
 ````
 
@@ -83,16 +84,25 @@ var sauceConnect = require('node-sauce-connect');
 var binPath = sauceConnect.path;
 
 var childArgs = [
-  'some argument'
+    // optional arguments
 ];
 
-childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
-  // handle results
-});
+function logger(data) {
+  console.log(data);
+}
+
+var instance = childProcess.spawn(binPath, childArgs);
+
+instance.stdout.on('data', logger);                   
+instance.on('data', logger);
+
+// run your tests
+
+instance.kill();
 
 ```
 
-You can also use the start and stop methods:
+You can also use the start and stop methods for convenience (this only works for one instance):
 
 ```javascript
 var sauceConnect = require('node-sauce-connect');
@@ -100,8 +110,18 @@ var sauceConnect = require('node-sauce-connect');
 args = [
 	// optional arguments
 ];
+
+function logger(data) {
+  console.log(data);
+}
+
 sauceConnect.start(args);
+
+sauceConnect.defaultInstance.stdout.on('data', logger);                   
+sauceConnect.defaultInstance.on('data', logger);
+
 // run your tests
+
 sauceConnect.stop();
 
 ```
