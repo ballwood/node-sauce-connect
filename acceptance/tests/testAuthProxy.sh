@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ "$TRAVIS_OS_NAME" == "linux" ];
+if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_NODE_VERSION" == "8" ];
 then
 
     # HTTP Proxy Auth Test
