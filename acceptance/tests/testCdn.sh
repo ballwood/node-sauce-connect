@@ -28,6 +28,6 @@ then
     unset sauceconnect_cdn_url
     unset no_proxy
 
-    kill PROXY_PID
+    kill $PROXY_PID
 
 fi
