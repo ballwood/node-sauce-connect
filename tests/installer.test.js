@@ -5,7 +5,6 @@ var expect = chai.expect;
 var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
 var Promise = require('yaku');
-var version = require('../version');
 chai.use(sinonChai);
 
 describe('installer.js', function () {
@@ -13,19 +12,27 @@ describe('installer.js', function () {
   var cdn = 'http://somecdn.com/saucelabs/';
   var platform = 'darwin';
   var arch = 'x64';
+  var manifestIndex = 'osx';
+  var fakeChecksum = 'e2d999c4470d1e7d73a1a24d75190b3b8ded1045';
 
   describe('install', function () {
 
     var getDownloadFilenameStub;
     var getDownloadUrlStub;
+    var getArchStub;
+    var getChecksumStub;
     var loggerStub;
 
     beforeEach(function () {
       getDownloadFilenameStub = sinon.stub(lib, 'getDownloadFilename');
       getDownloadUrlStub = sinon.stub(lib, 'getDownloadUrl');
+      getArchStub = sinon.stub(lib, 'getDownloadArch');
+      getChecksumStub = sinon.stub(lib, 'getChecksum');
+
       loggerStub = sinon.stub();
       sinon.stub(lib, 'createTmpDir').returns(Promise.resolve());
       sinon.stub(lib, 'download').returns(Promise.resolve());
+      sinon.stub(lib, 'verifyFileChecksum').returns(Promise.resolve());
       sinon.stub(lib, 'extract').returns(Promise.resolve());
       sinon.stub(lib, 'moveToLib').returns(Promise.resolve());
       sinon.stub(lib, 'setExecutePermissions').returns(Promise.resolve());
@@ -35,21 +42,26 @@ describe('installer.js', function () {
     afterEach(function () {
       getDownloadFilenameStub.restore();
       getDownloadUrlStub.restore();
+      getArchStub.restore();
+      getChecksumStub.restore();
+
       lib.createTmpDir.restore();
       lib.download.restore();
       lib.extract.restore();
       lib.moveToLib.restore();
+      lib.verifyFileChecksum.restore();
       lib.setExecutePermissions.restore();
       lib.obfuscateAuthInUri.restore();
     });
 
     it('should call getDownloadFilename with correct platform, arch and lib', function () {
+      var promise;
 
-      var promise = installer.install(loggerStub, cdn, platform, arch);
+      getArchStub.returns(manifestIndex);
 
-      expect(getDownloadFilenameStub).to.have.been.calledWith(platform, arch, version);
+      promise = installer.install(loggerStub, cdn, platform, arch);
 
-      getDownloadFilenameStub.restore();
+      expect(getDownloadFilenameStub).to.have.been.calledWith(manifestIndex);
 
       return promise;
 
@@ -78,15 +90,35 @@ describe('installer.js', function () {
 
       getDownloadFilenameStub.returns(fakeTarGzFilename);
       getDownloadUrlStub.returns(cdn);
+      getChecksumStub.returns(fakeChecksum);
 
       promise = installer.install(loggerStub, cdn, platform, arch).then(function () {
 
         expect(lib.download).to.have.been.calledWith(
           loggerStub,
           sinon.match.any,
-          cdn, fakeTarGzFilename,
+          cdn,
           sinon.match.any);
 
+      }).catch(function () {
+        throw new Error('was not supposed to reject');
+      });
+
+      return promise;
+
+    });
+
+    it('should call verifyFileChecksum with the correct file path', function () {
+
+      var promise;
+
+      getDownloadFilenameStub.returns(fakeTarGzFilename);
+      getChecksumStub.returns(fakeChecksum);
+      getDownloadUrlStub.returns(cdn);
+
+      promise = installer.install(loggerStub, cdn, platform, arch).then(function () {
+        expect(lib.verifyFileChecksum)
+          .to.have.been.calledWith('sha1', fakeChecksum, sinon.match.any);
       }).catch(function () {
         throw new Error('was not supposed to reject');
       });

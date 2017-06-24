@@ -7,14 +7,18 @@ var expect = chai.expect;
 var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
 var Promise = require('yaku');
+var crypto = require('crypto');
 chai.use(sinonChai);
 
 describe('lib.js', function () {
   var fakeZipFilename = 'sc.zip';
   var fakeTarGzFilename = 'sc.tar.gz';
   var fakePath = '/a/test/path/';
+  var fakeCdn = 'http://www.google.com/';
+  var fakeCdnFile = path.join(fakeCdn, fakeTarGzFilename);
   var fakeZipPath = path.join(fakePath, fakeZipFilename);
   var fakeTarGzPath = path.join(fakePath, fakeTarGzFilename);
+  var fakeSha1 = 'e2d999c4470d1e7d73a1a24d75190b3b8ded1045';
 
   describe('obfuscateAuthInUri', function () {
 
@@ -88,43 +92,15 @@ describe('lib.js', function () {
   });
 
   describe('getDownloadFilename', function () {
-    var version = '1.0.0';
 
-    describe('when platform is linux', function () {
-      var platform = 'linux';
-
-      it('should return sc-1.0.0-linux.tar.gz when arch is x64', function () {
-        expect(lib.getDownloadFilename(platform, 'x64', version)).to.equal('sc-1.0.0-linux.tar.gz');
-      });
-
-      it('should return sc-1.0.0-linux32.tar.gz when arch is x86', function () {
-        expect(lib.getDownloadFilename(platform, 'ia32', version)).to.equal('sc-1.0.0-linux32.tar.gz');
-      });
-
-      it('should throw an exception when arch is anything else', function () {
-        expect(lib.getDownloadFilename.bind(platform, 'zzz', version)).to.throw(Error);
-      });
+    describe('when the arch doesn\'t exist in the manifest', function () {
 
     });
 
-    describe('when platform is darwin', function () {
-      var platform = 'darwin';
+    describe('when the arch does exist in the manifest', function () {
 
-      it('should return osx when arch is x64', function () {
-        expect(lib.getDownloadFilename(platform, 'x64', version)).to.equal('sc-1.0.0-osx.zip');
-      });
+      beforeEach(function () {
 
-      it('should throw an exception when arch is anything else', function () {
-        expect(lib.getDownloadFilename.bind(platform, 'zzz', version)).to.throw(Error);
-      });
-
-    });
-
-    describe('when platform is win32', function () {
-      var platform = 'win32';
-
-      it('should return sc-1.0.0-win32.zip', function () {
-        expect(lib.getDownloadFilename(platform, 'x64', version)).to.equal('sc-1.0.0-win32.zip');
       });
 
     });
@@ -221,7 +197,6 @@ describe('lib.js', function () {
   });
 
   describe('download', function () {
-    var fakeUrl = 'https://www.google.com';
     var requestStub;
     var loggerStub;
     var fakeRequestStream;
@@ -234,7 +209,9 @@ describe('lib.js', function () {
       fakeFsStream = new stream.Readable();
       fakeFsStream._read = sinon.stub();
       fakeFsStream.write = sinon.stub();
+
       sinon.stub(fs, 'createWriteStream').returns(fakeFsStream);
+
       requestStub = sinon.stub().returns(fakeRequestStream);
       loggerStub = sinon.stub();
     });
@@ -245,10 +222,12 @@ describe('lib.js', function () {
 
     it('should call the request library with the correct url', function () {
 
-      var promise = lib.download(loggerStub, requestStub, fakeUrl, fakeTarGzFilename, fakePath);
+      var promise;
+
+      promise = lib.download(loggerStub, requestStub, fakeCdnFile, fakePath);
       fakeFsStream.emit('finish');
 
-      expect(requestStub).to.have.been.calledWith(fakeUrl);
+      expect(requestStub).to.have.been.calledWith(fakeCdnFile);
 
       return promise;
 
@@ -256,7 +235,7 @@ describe('lib.js', function () {
 
     it('should reject on http error', function () {
 
-      var promise = lib.download(loggerStub, requestStub, fakeUrl, fakeTarGzFilename, fakePath)
+      var promise = lib.download(loggerStub, requestStub, fakeCdnFile, fakePath)
         .then(function () {
           throw new Error('was not supposed to resolve');
         }).catch(function (error) {
@@ -272,7 +251,7 @@ describe('lib.js', function () {
     it('should pass data from the request response to the file stream', function () {
       var data = 'test';
 
-      var promise = lib.download(loggerStub, requestStub, fakeUrl, fakeTarGzFilename, fakePath)
+      var promise = lib.download(loggerStub, requestStub, fakeCdnFile, fakePath)
         .then(function () {
           throw new Error('was not supposed to resolve');
         }).catch(function (error) {
@@ -290,7 +269,7 @@ describe('lib.js', function () {
 
     it('should reject on writing to filesystem error', function () {
 
-      var promise = lib.download(loggerStub, requestStub, fakeUrl, fakeTarGzFilename, fakePath)
+      var promise = lib.download(loggerStub, requestStub, fakeCdnFile, fakePath)
         .then(function () {
           throw new Error('was not supposed to resolve');
         }).catch(function (error) {
@@ -307,15 +286,90 @@ describe('lib.js', function () {
 
       var expectedOutputPath = path.join(fakePath, fakeTarGzFilename);
 
-      var promise = lib.download(loggerStub, requestStub, fakeUrl, fakeTarGzFilename, fakePath)
+      var promise = lib.download(loggerStub, requestStub, fakeCdnFile, fakePath)
         .then(function (filename) {
           expect(filename).to.equal(expectedOutputPath);
         }).catch(function () {
           throw new Error('was not supposed to reject');
-
         });
 
       fakeFsStream.emit('finish');
+
+      return promise;
+
+    });
+
+  });
+
+  describe('verifyFileChecksum', function () {
+    var fakeHash;
+    var fakeFsStream;
+
+    beforeEach(function () {
+      // stub out an actual
+      fakeHash = crypto.createHash('sha1');
+      sinon.stub(fakeHash, 'update');
+      sinon.stub(fakeHash, 'digest');
+      sinon.stub(crypto, 'createHash').returns(fakeHash);
+
+      fakeFsStream = new stream.Readable();
+      fakeFsStream._read = sinon.stub();
+      fakeFsStream.write = sinon.stub();
+
+      sinon.stub(fs, 'createReadStream').returns(fakeFsStream);
+
+    });
+
+    afterEach(function () {
+      crypto.createHash.restore();
+      fs.createReadStream.restore();
+    });
+
+    it('should reject if there is an error reading the file', function () {
+
+      var promise = lib.verifyFileChecksum('sha1', fakeSha1, fakePath)
+        .then(function () {
+          throw new Error('was not supposed to resolve');
+        }).catch(function (error) {
+          expect(error).to.be.a('Error');
+        });
+
+      fakeFsStream.emit('error');
+
+      return promise;
+
+    });
+
+
+    it('should reject if the file does not match the checksum given', function () {
+
+      var promise = lib.verifyFileChecksum('sha1', fakeSha1, fakePath)
+        .then(function () {
+          throw new Error('was not supposed to resolve');
+        }).catch(function (error) {
+          expect(error).to.be.a('Error');
+        });
+
+      fakeFsStream.emit('end');
+
+      return promise;
+
+    });
+
+    it('should resolve if the file does match the checksum given', function () {
+
+      var promise;
+
+      fakeHash.digest.returns(fakeSha1);
+
+      promise = lib.verifyFileChecksum('sha1', fakeSha1, fakePath)
+        .then(function () {
+          throw new Error('was not supposed to resolve');
+        }).catch(function (error) {
+          expect(error).to.be.a('Error');
+        });
+
+      fakeFsStream.emit('end');
 
       return promise;
 
