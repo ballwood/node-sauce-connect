@@ -10,7 +10,7 @@ then
     rm ./lib/sc
 
     # set cdn_url to saucelabs
-    sauceconnect_cdnurl=http://localhost:8080
+    sauceconnect_cdnurl=http://localhost:8080/downloads
 
     export sauceconnect_cdnurl
 
