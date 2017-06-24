@@ -1,0 +1,23 @@
+{
+  "linux": {
+    "build": 3628,
+    "download_url": "https://saucelabs.com/downloads/sc-4.4.7-linux.tar.gz",
+    "sha1": "edb6816c873cc4cdf1d099e1534778d35f184942"
+  },
+  "linux32": {
+    "build": 3628,
+    "download_url": "https://saucelabs.com/downloads/sc-4.4.7-linux32.tar.gz",
+    "sha1": "adf56c6e098e9512179f0cc03848e948e5f9dbc2"
+  },
+  "osx": {
+    "build": 3628,
+    "download_url": "https://saucelabs.com/downloads/sc-4.4.7-osx.zip",
+    "sha1": "6f3e693135294e536cd99fc9f9d3b55532c68172"
+  },
+  "version": "4.4.7",
+  "win32": {
+    "build": 1601,
+    "download_url": "https://saucelabs.com/downloads/sc-4.4.7-win32.zip",
+    "sha1": "2ada3428a1f291c7c669f96009295582d2d7438b"
+  }
+}
