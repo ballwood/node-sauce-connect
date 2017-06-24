@@ -8,6 +8,8 @@ node ./acceptance/support/simple-reverse-proxy.js &
 
 PROXY_PID=$!
 
+echo "Proxy started on 8080 PID: ${PROXY_PID}"
+
 # install sc
 node install.js
 
@@ -21,12 +23,15 @@ PROXY_TASK_RUNNING=$?
 
 # check if the process is still running by examining the exit code of ps -p
 PROXY_TEST_RESULT=1
-if [ $TASK_RUNNING -eq 1 ]; then
-  # not running, so has been hit.
-  PROXY_TEST_RESULT=0
-fi
 
-kill $PROXY_PID
+if [ $PROXY_TASK_RUNNING -eq 1 ]; then
+  # not running, so has been hit.
+  echo "Proxy finished, test passed"
+  PROXY_TEST_RESULT=0
+else
+  echo "Proxy not finished, test failed"
+  kill $PROXY_PID
+fi
 
 exit $PROXY_TEST_RESULT
 
