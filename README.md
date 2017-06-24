@@ -138,7 +138,7 @@ used for revisions to the installer.
 Node Version Support
 ----------
 
-The package has been tested with latest versions of Node 4, 5, 6 and 7.
+The package has been tested with latest versions of Node 4, 5, 6, 7 and 8.
 
 Author
 ------
