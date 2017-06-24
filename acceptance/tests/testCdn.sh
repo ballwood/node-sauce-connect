@@ -10,7 +10,15 @@ then
     rm ./lib/sc
 
     # set cdn_url to saucelabs
-    export sauceconnect_cdn_url=https://saucelabs.com/
+    export sauceconnect_cdn_url=http://localhost:8080/
+
+    # start proxy in bg
+    node ./acceptance/support/simple-reverse-proxy.js &
+
+    # proved by previous test to work
+    export no_proxy=saucelabs.com
+
+    PROXY_PID=$!
 
     # install sc
     node install.js
@@ -19,5 +27,8 @@ then
     ./acceptance/tests/test.sh
 
     unset sauceconnect_cdn_url
+    unset no_proxy
+
+    kill PROXY_PID
 
 fi
