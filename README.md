@@ -7,8 +7,7 @@
 
 Note
 -----------------------
-This package is currently in beta status...use at your own peril! I plan to upgrade the CI
-tests some more soon so I can prove everything runs correctly (proxies etc).
+This package is currently in beta status...use at your own peril!
 
 The reason for creating it was I'm working in an enterprise environment and I wanted a 
 simple way to grab sauce connect from a local nexus repository on npm install. 

@@ -1,0 +1,9 @@
+node_modules
+.idea
+.DS_Store
+lib/sc
+/lib/sauceconnect/
+.travis.yml
+appveyor.yml
+acceptance.sh
+acceptance
