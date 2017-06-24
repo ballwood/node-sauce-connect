@@ -1,33 +1,32 @@
 #!/usr/bin/env bash
 
-if [ "$TRAVIS_OS_NAME" == "linux" ];
-then
+# remove old sauce connect
+rm ./lib/sc
 
-    # HTTP Proxy Auth Test
-    echo "Executing cdn test"
+# start proxy in bg
+node ./acceptance/support/simple-reverse-proxy.js &
 
-    # remove old sauce connect
-    rm ./lib/sc
+PROXY_PID=$!
 
-    # set cdn_url to saucelabs
-    sauceconnect_cdnurl=http://localhost:8080/downloads
+# install sc
+node install.js
 
-    export sauceconnect_cdnurl
+# test
+./acceptance/tests/test.sh
 
-    # start proxy in bg
-    node ./acceptance/support/simple-reverse-proxy.js &
+# ps -p Checks if the process is still running. If it is it returns 0,
+# otherwise it returns 1
+ps -p $PROXY_PID > /dev/null
+PROXY_TASK_RUNNING=$?
 
-    PROXY_PID=$!
-
-    # install sc
-    node install.js
-
-    # test
-    ./acceptance/tests/test.sh
-
-    unset sauceconnect_cdn_url
-    unset no_proxy
-
-    kill $PROXY_PID
-
+# check if the process is still running by examining the exit code of ps -p
+PROXY_TEST_RESULT=1
+if [ $TASK_RUNNING -eq 1 ]; then
+  # not running, so has been hit.
+  PROXY_TEST_RESULT=0
 fi
+
+kill $PROXY_PID
+
+exit $PROXY_TEST_RESULT
+

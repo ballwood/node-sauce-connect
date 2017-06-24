@@ -23,12 +23,12 @@ ps -p $SAUCE_CONNECT_PID > /dev/null
 TASK_RUNNING=$?
 
 # Check if the process is still running by examining the exit code of ps -p
-TEST_RESULT=1
+SAUCE_CONNECT_TEST_RESULT=1
 if [ $TASK_RUNNING -eq 0 ]; then
   # Still running so return with safe exit code
-  TEST_RESULT=0
+  SAUCE_CONNECT_TEST_RESULT=0
 fi
 
 kill $SAUCE_CONNECT_PID
 
-exit $TEST_RESULT
+exit $SAUCE_CONNECT_TEST_RESULT
