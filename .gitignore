@@ -6,3 +6,5 @@ lib/sc
 /lib/sauceconnect/
 coverage
 .nyc_output
+/coverage/
+/.nyc_output/
