@@ -7,3 +7,5 @@ lib/sc
 appveyor.yml
 acceptance.sh
 acceptance
+/coverage/
+/.nyc_output/

@@ -32,6 +32,8 @@
   "scripts": {
     "install": "node install.js",
     "test": "mocha tests/**/*.test.js",
+    "nyc": "nyc npm test && nyc report",
+    "coverage": "npm run nyc -- --reporter=html",
     "lint": "eslint **/*.js"
   },
   "dependencies": {
@@ -53,6 +55,7 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
     "mocha": "^3.2.0",
+    "nyc": "^10.2.0",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0"
   }
