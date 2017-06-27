@@ -9,6 +9,9 @@ chai.use(sinonChai);
 
 describe('installer.js', function () {
   var fakeTarGzFilename = 'sc.tar.gz';
+  var fakePath = '/a/test/path/';
+  var fakeExecutablePath = '/a/test/path/sc';
+  var fakeNodeModulesPath = '/a/project/node_modules/sc';
   var cdn = 'http://somecdn.com/saucelabs/';
   var platform = 'darwin';
   var arch = 'x64';
@@ -30,12 +33,12 @@ describe('installer.js', function () {
       getChecksumStub = sinon.stub(lib, 'getChecksum');
 
       loggerStub = sinon.stub();
-      sinon.stub(lib, 'createTmpDir').returns(Promise.resolve());
-      sinon.stub(lib, 'download').returns(Promise.resolve());
-      sinon.stub(lib, 'verifyFileChecksum').returns(Promise.resolve());
-      sinon.stub(lib, 'extract').returns(Promise.resolve());
-      sinon.stub(lib, 'moveToLib').returns(Promise.resolve());
-      sinon.stub(lib, 'setExecutePermissions').returns(Promise.resolve());
+      sinon.stub(lib, 'createTmpDir').returns(Promise.resolve(fakePath));
+      sinon.stub(lib, 'download').returns(Promise.resolve(fakePath + fakeTarGzFilename));
+      sinon.stub(lib, 'verifyFileChecksum').returns(Promise.resolve(fakePath + fakeTarGzFilename));
+      sinon.stub(lib, 'extract').returns(Promise.resolve(fakeExecutablePath));
+      sinon.stub(lib, 'moveToLib').returns(Promise.resolve(fakeNodeModulesPath));
+      sinon.stub(lib, 'setExecutePermissions').returns(Promise.resolve(fakeNodeModulesPath));
       sinon.stub(lib, 'obfuscateAuthInUri');
     });
 
@@ -98,7 +101,7 @@ describe('installer.js', function () {
           loggerStub,
           sinon.match.any,
           cdn,
-          sinon.match.any);
+          fakePath);
 
       }).catch(function () {
         throw new Error('was not supposed to reject');
@@ -108,7 +111,7 @@ describe('installer.js', function () {
 
     });
 
-    it('should call verifyFileChecksum with the correct file path', function () {
+    it('should call verifyFileChecksum with sha1, the checksum and the file path', function () {
 
       var promise;
 
@@ -118,7 +121,7 @@ describe('installer.js', function () {
 
       promise = installer.install(loggerStub, cdn, platform, arch).then(function () {
         expect(lib.verifyFileChecksum)
-          .to.have.been.calledWith('sha1', fakeChecksum, sinon.match.any);
+          .to.have.been.calledWith('sha1', fakeChecksum, fakePath + fakeTarGzFilename);
       }).catch(function () {
         throw new Error('was not supposed to reject');
       });
@@ -127,7 +130,46 @@ describe('installer.js', function () {
 
     });
 
-    it('should call setExecutePermissions with the platform passed in', function () {
+    it('should call extract with the correct file path', function () {
+
+      var promise;
+
+      getDownloadFilenameStub.returns(fakeTarGzFilename);
+      getChecksumStub.returns(fakeChecksum);
+      getDownloadUrlStub.returns(cdn);
+
+      promise = installer.install(loggerStub, cdn, platform, arch).then(function () {
+        expect(lib.extract)
+          .to.have.been.calledWith(loggerStub, sinon.match.any, fakePath + fakeTarGzFilename);
+      }).catch(function () {
+        throw new Error('was not supposed to reject');
+      });
+
+      return promise;
+
+    });
+
+    it('should call moveToLib with the correct file path', function () {
+
+      var promise;
+
+      getDownloadFilenameStub.returns(fakeTarGzFilename);
+      getChecksumStub.returns(fakeChecksum);
+      getDownloadUrlStub.returns(cdn);
+
+      promise = installer.install(loggerStub, cdn, platform, arch).then(function () {
+        expect(lib.moveToLib)
+          .to.have.been.calledWith(loggerStub, fakeExecutablePath);
+      }).catch(function () {
+        throw new Error('was not supposed to reject');
+      });
+
+      return promise;
+
+    });
+
+
+    it('should call setExecutePermissions with the platform & moved file passed in', function () {
 
       var promise;
 
@@ -136,7 +178,7 @@ describe('installer.js', function () {
 
       promise = installer.install(loggerStub, cdn, platform, arch).then(function () {
         expect(lib.setExecutePermissions)
-        .to.have.been.calledWith(loggerStub, platform, sinon.match.any);
+        .to.have.been.calledWith(loggerStub, platform, fakeNodeModulesPath);
       }).catch(function () {
         throw new Error('was not supposed to reject');
       });
