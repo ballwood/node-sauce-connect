@@ -9,3 +9,4 @@ acceptance.sh
 acceptance
 /coverage/
 /.nyc_output/
+/tests/
