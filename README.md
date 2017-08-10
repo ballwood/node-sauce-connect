@@ -7,9 +7,7 @@
 
 Note
 -----------------------
-This package is currently in beta status...use at your own peril!
-
-The reason for creating it was I'm working in an enterprise environment and I wanted a 
+The reason for creating this package was I'm working in an enterprise environment and I wanted a 
 simple way to grab sauce connect from a local nexus repository on npm install. 
 sauce-connect-launcher does this but felt extremely heavyweight and there was no 
 way to specify where to download from.
