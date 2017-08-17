@@ -1,19 +1,19 @@
 {
   "linux": {
-    "download_url": "https://saucelabs.com/downloads/sc-4.4.8-linux.tar.gz",
-    "sha1": "e0ec01aba8bd523838349af54582a2674b107dbb"
+    "download_url": "https://saucelabs.com/downloads/sc-4.4.9-linux.tar.gz",
+    "sha1": "733745d519cde6def195878140340ecb806cdf21"
   },
   "linux32": {
-    "download_url": "https://saucelabs.com/downloads/sc-4.4.8-linux32.tar.gz",
-    "sha1": "779552aa573a675629bf42a9410454dc3286e958"
+    "download_url": "https://saucelabs.com/downloads/sc-4.4.9-linux32.tar.gz",
+    "sha1": "7add5bee0fce38a008909cdc75522063e6f45f0b"
   },
   "osx": {
-    "download_url": "https://saucelabs.com/downloads/sc-4.4.8-osx.zip",
-    "sha1": "8964dde5a902842f1f26e3a2e47094a9146b06e2"
+    "download_url": "https://saucelabs.com/downloads/sc-4.4.9-osx.zip",
+    "sha1": "80720ce6640a000d6d0fa84e8f4d692b90918f91"
   },
-  "version": "4.4.8",
+  "version": "4.4.9",
   "win32": {
-    "download_url": "https://saucelabs.com/downloads/sc-4.4.8-win32.zip",
-    "sha1": "ab61fc041f5d418eb9f3f75b4495f38cacfb35fd"
+    "download_url": "https://saucelabs.com/downloads/sc-4.4.9-win32.zip",
+    "sha1": "4ecdacbb8b25f62308a4a39c624bf1e1dc3fde45"
   }
 }
