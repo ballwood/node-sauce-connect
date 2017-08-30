@@ -19,7 +19,7 @@ Installing
 npm install node-sauce-connect
 ```
 
-### Custom binaries url
+### Custom Binary Download Url
 
 To use a mirror of the Sauce Connect binaries use npm config property `sauceconnect_cdnurl`.
 Default is `https://saucelabs.com/downloads`.
@@ -32,6 +32,52 @@ Or add property into your [`.npmrc`](https://docs.npmjs.com/files/npmrc) file.
 
 ```
 sauceconnect_cdnurl=https://your.url/sauceconnect
+```
+
+### Custom Certificate Authority
+
+Sometimes on internal networks certificates are self signed by the organization 
+which causes errors when downloading. You can use the following npm config properties 
+to force node-sauce-connect to trust these certificate authorities.
+
+```shell
+npm install node-sauce-connect --cafile=/path/to/certificate.crt
+```
+
+Or in your [`.npmrc`](https://docs.npmjs.com/files/npmrc) file.
+   
+```
+cafile=/path/to/certificate.crt
+```
+
+You can also provide the certificate as a string to node-sauce-connect by
+using the ca variable
+
+```shell
+npm install node-sauce-connect --ca="-----BEGIN CERTIFICATE-----\nMIID0zCCArugAwIBAgI...."
+```
+
+Or in your [`.npmrc`](https://docs.npmjs.com/files/npmrc) file.
+   
+```
+ca="-----BEGIN CERTIFICATE-----\nMIID0zCCArugAwIBAgI...."
+```
+
+### Non Strict SSL Mode
+
+Non strict SSL environment variables are also respected, this means node-sauce-connect 
+will ignore any SSL errors that are thrown when downloading. 
+
+`strict-ssl` defaults to true if not set.
+
+```shell
+npm install node-sauce-connect --strict-ssl=false
+```
+
+Or in your [`.npmrc`](https://docs.npmjs.com/files/npmrc) file.
+   
+```
+strict-ssl=false
 ```
 
 ### Obfuscation of HTTP(S)_PROXY basic auth
@@ -67,7 +113,7 @@ you can execute by placing the following in your `package.json` file.
 }
 ````
 
-Running via node
+Running via Node
 ----------------
 
 The package exports a `path` string that contains the path to the
