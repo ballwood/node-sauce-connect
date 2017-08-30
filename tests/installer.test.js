@@ -92,6 +92,12 @@ describe('installer.js', function () {
 
     describe('when ssl env vars aren\'t set', function () {
 
+      beforeEach(function () {
+        delete process.env.npm_config_cafile;
+        delete process.env.npm_config_ca;
+        delete process.env.npm_config_strict_ssl;
+      });
+
       it('should pass blank strings to httpsRequest', function () {
         var promise;
 
