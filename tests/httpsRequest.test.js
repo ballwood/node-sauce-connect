@@ -14,8 +14,8 @@ describe('httpsRequest.js', function () {
 
     var crtFile = path.resolve(__dirname, '../acceptance/support/keys/ca.crt');
     var crtFile2 = path.resolve(__dirname, '../acceptance/support/keys/server.crt');
-    var cert1 = fs.readFileSync(crtFile, { encoding: 'ascii' });
-    var cert2 = fs.readFileSync(crtFile2, { encoding: 'ascii' });
+    var cert1 = fs.readFileSync(crtFile, { encoding: 'utf8' });
+    var cert2 = fs.readFileSync(crtFile2, { encoding: 'utf8' });
 
     beforeEach(function () {
       sinon.stub(request, 'defaults');
