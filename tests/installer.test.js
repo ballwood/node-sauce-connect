@@ -1,5 +1,6 @@
 var installer = require('../lib/installer');
 var lib = require('../lib/lib');
+var httpsRequest = require('../lib/httpsRequest');
 var chai = require('chai');
 var expect = chai.expect;
 var sinon = require('sinon');
@@ -8,6 +9,7 @@ var Promise = require('yaku');
 chai.use(sinonChai);
 
 describe('installer.js', function () {
+  var fakeRequest = function () {};
   var fakeTarGzFilename = 'sc.tar.gz';
   var fakePath = '/a/test/path/';
   var fakeExecutablePath = '/a/test/path/sc';
@@ -24,6 +26,8 @@ describe('installer.js', function () {
     var getDownloadUrlStub;
     var getArchStub;
     var getChecksumStub;
+    var httpsRequestCreateStub;
+    var wrapWithProgressStub;
     var loggerStub;
 
     beforeEach(function () {
@@ -31,6 +35,8 @@ describe('installer.js', function () {
       getDownloadUrlStub = sinon.stub(lib, 'getDownloadUrl');
       getArchStub = sinon.stub(lib, 'getDownloadArch');
       getChecksumStub = sinon.stub(lib, 'getChecksum');
+      httpsRequestCreateStub = sinon.stub(httpsRequest, 'create');
+      wrapWithProgressStub = sinon.stub(httpsRequest, 'wrapWithProgress');
 
       loggerStub = sinon.stub();
       sinon.stub(lib, 'createTmpDir').returns(Promise.resolve(fakePath));
@@ -47,6 +53,8 @@ describe('installer.js', function () {
       getDownloadUrlStub.restore();
       getArchStub.restore();
       getChecksumStub.restore();
+      httpsRequestCreateStub.restore();
+      wrapWithProgressStub.restore();
 
       lib.createTmpDir.restore();
       lib.download.restore();
@@ -78,10 +86,69 @@ describe('installer.js', function () {
 
       promise = installer.install(loggerStub, cdn, platform, arch);
 
-      expect(getDownloadUrlStub).to.have.been.calledWith(cdn, fakeTarGzFilename);
+      return promise;
 
-      lib.getDownloadUrl.restore();
-      lib.getDownloadFilename.restore();
+    });
+
+    describe('when ssl env vars aren\'t set', function () {
+
+      it('should pass blank strings to httpsRequest', function () {
+        var promise;
+
+        promise = installer.install(loggerStub, cdn, platform, arch);
+
+        expect(httpsRequestCreateStub).to.have.been.calledWith(
+          '',
+          '',
+          ''
+        );
+
+        return promise;
+
+      });
+
+    });
+
+    describe('when ssl env vars are set', function () {
+
+      beforeEach(function () {
+        process.env.npm_config_cafile = 'test1';
+        process.env.npm_config_ca = 'test2';
+        process.env.npm_config_strict_ssl = 'false';
+      });
+
+      afterEach(function () {
+        delete process.env.npm_config_cafile;
+        delete process.env.npm_config_ca;
+        delete process.env.npm_config_strict_ssl;
+      });
+
+      it('should pass them correctly to httpsRequest', function () {
+        var promise;
+
+        promise = installer.install(loggerStub, cdn, platform, arch);
+
+        expect(httpsRequestCreateStub).to.have.been.calledWith(
+          process.env.npm_config_strict_ssl,
+          process.env.npm_config_cafile,
+          process.env.npm_config_ca
+        );
+
+        return promise;
+
+      });
+
+    });
+
+    it('should wrap httpsRequest with progress event handlers', function () {
+
+      var promise;
+
+      httpsRequestCreateStub.returns(fakeRequest);
+
+      promise = installer.install(loggerStub, cdn, platform, arch);
+
+      expect(wrapWithProgressStub).to.have.been.calledWith(fakeRequest);
 
       return promise;
 
@@ -94,12 +161,13 @@ describe('installer.js', function () {
       getDownloadFilenameStub.returns(fakeTarGzFilename);
       getDownloadUrlStub.returns(cdn);
       getChecksumStub.returns(fakeChecksum);
+      wrapWithProgressStub.returns(fakeRequest);
 
       promise = installer.install(loggerStub, cdn, platform, arch).then(function () {
 
         expect(lib.download).to.have.been.calledWith(
           loggerStub,
-          sinon.match.any,
+          fakeRequest,
           cdn,
           fakePath);
 
