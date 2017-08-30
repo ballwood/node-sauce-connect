@@ -11,6 +11,7 @@ SSL_PROXY_PID=$!
 echo "SSL reverse proxy started on 8081 PID: ${SSL_PROXY_PID}"
 
 export npm_config_strict_ssl=false;
+export SAUCECONNECT_CDNURL=https://localhost:8081/downloads
 
 # install sc
 node install.js
@@ -36,5 +37,6 @@ else
 fi
 
 unset npm_config_strict_ssl
+unset SAUCECONNECT_CDNURL
 
 exit $STRICT_SSL_TEST_RESULT
