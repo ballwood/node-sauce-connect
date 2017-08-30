@@ -6,10 +6,6 @@ then
     # x86 Test
     echo "Executing x86 tests"
 
-    # remove any proxy set
-    unset https_proxy
-    unset no_proxy
-
     # remove old modules
     rm -rf node_modules
 

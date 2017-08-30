@@ -10,7 +10,13 @@ var debugMode = process.env.npm_config_node_sauce_connect_debug ||
 
 var logger = console.log;
 
-installer.install(logger, cdnUrl, process.platform, process.arch, debugMode).then(function () {
+installer.install(
+  logger,
+  cdnUrl,
+  process.platform,
+  process.arch,
+  debugMode
+).then(function () {
   process.exit(0);
 }).catch(function (err) {
   console.log(err);

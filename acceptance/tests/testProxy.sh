@@ -6,10 +6,6 @@ then
     # HTTP Proxy No Auth Test
     echo "Executing proxy test"
 
-    # remove any proxy set
-    unset https_proxy
-    unset no_proxy
-
     # set https_proxy
     export https_proxy=http://localhost:3128
 
@@ -21,5 +17,7 @@ then
 
     # test
     ./acceptance/tests/test.sh
+
+    unset https_proxy
 
 fi

@@ -6,10 +6,6 @@ then
     # HTTP Proxy Auth Test
     echo "Executing authenticated proxy test"
 
-    # remove any proxy set
-    unset https_proxy
-    unset no_proxy
-
     # copy auth conf over
     sudo cp ./acceptance/squid-conf/squidAuth.conf /etc/squid3/squid.conf
 
@@ -36,5 +32,8 @@ then
 
     # test
     ./acceptance/tests/test.sh
+
+    # remove any proxy set
+    unset https_proxy
 
 fi
