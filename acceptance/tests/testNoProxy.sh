@@ -27,11 +27,11 @@ then
     # install sc
     node install.js
 
-    # test
-    ./acceptance/tests/test.sh
-
     # remove any proxy set
     unset https_proxy
     unset no_proxy
+
+    # test
+    ./acceptance/tests/test.sh
 
 fi

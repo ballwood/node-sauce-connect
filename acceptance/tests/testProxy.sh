@@ -15,9 +15,9 @@ then
     # install sc
     node install.js
 
+    unset https_proxy
+
     # test
     ./acceptance/tests/test.sh
-
-    unset https_proxy
 
 fi
