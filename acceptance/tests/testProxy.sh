@@ -13,7 +13,7 @@ then
     rm ./lib/sc
 
     # install sc
-    node install.js
+    npm install
 
     unset https_proxy
 

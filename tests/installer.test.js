@@ -98,15 +98,15 @@ describe('installer.js', function () {
         delete process.env.npm_config_strict_ssl;
       });
 
-      it('should pass blank strings to httpsRequest', function () {
+      it('should pass undefined to httpsRequest', function () {
         var promise;
 
         promise = installer.install(loggerStub, cdn, platform, arch);
 
         expect(httpsRequestCreateStub).to.have.been.calledWith(
-          '',
-          '',
-          ''
+          undefined,
+          undefined,
+          undefined
         );
 
         return promise;

@@ -25,7 +25,7 @@ then
     export no_proxy=saucelabs.com
 
     # install sc
-    node install.js
+    npm install
 
     # remove any proxy set
     unset https_proxy

@@ -11,7 +11,7 @@ PROXY_PID=$!
 echo "Proxy started on 8080 PID: ${PROXY_PID}"
 
 # install sc
-node install.js
+npm install
 
 # test
 ./acceptance/tests/test.sh
