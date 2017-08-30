@@ -16,6 +16,9 @@ export SAUCECONNECT_CDNURL=https://localhost:8081/downloads
 # install sc
 node install.js
 
+unset npm_config_strict_ssl
+unset SAUCECONNECT_CDNURL
+
 # test
 ./acceptance/tests/test.sh
 
@@ -35,8 +38,5 @@ else
   echo "SSL proxy not finished, test failed"
   kill $SSL_PROXY_PID
 fi
-
-unset npm_config_strict_ssl
-unset SAUCECONNECT_CDNURL
 
 exit $STRICT_SSL_TEST_RESULT

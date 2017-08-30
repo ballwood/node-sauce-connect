@@ -16,6 +16,9 @@ export npm_config_ca=$(cat ./acceptance/support/keys/ca.crt)
 # install sc
 node install.js
 
+unset npm_config_ca
+unset SAUCECONNECT_CDNURL
+
 # test
 ./acceptance/tests/test.sh
 
@@ -35,8 +38,5 @@ else
   echo "SSL proxy not finished, test failed"
   kill $SSL_PROXY_PID
 fi
-
-unset npm_config_ca
-unset SAUCECONNECT_CDNURL
 
 exit $CA_TEST_RESULT
