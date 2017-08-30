@@ -8,7 +8,7 @@ var fs = require('fs');
 var path = require('path');
 chai.use(sinonChai);
 
-describe('httpsRequest', function () {
+describe('httpsRequest.js', function () {
 
   describe('create', function () {
 
