@@ -11,13 +11,13 @@ SSL_PROXY_PID=$!
 echo "SSL reverse proxy started on 8081 PID: ${SSL_PROXY_PID}"
 
 export SAUCECONNECT_CDNURL=https://localhost:8081/downloads
-export npm_config_ca=$(cat ./acceptance/support/keys/ca.crt)
+npm config set ca "$(cat ./acceptance/support/keys/ca.crt)"
 
 # install sc
-node install.js
+npm install
 
-unset npm_config_ca
 unset SAUCECONNECT_CDNURL
+npm config rm ca
 
 # test
 ./acceptance/tests/test.sh

@@ -37,45 +37,27 @@ sauceconnect_cdnurl=https://your.url/sauceconnect
 ### Custom Certificate Authority
 
 Sometimes on internal networks certificates are self signed by the organization 
-which causes errors when downloading. You can use the following npm config properties 
+which causes errors when downloading. You can use the the following 
+[`.npmrc`](https://docs.npmjs.com/files/npmrc) config settings 
 to force node-sauce-connect to trust these certificate authorities.
-
-```shell
-npm install node-sauce-connect --cafile=/path/to/certificate.crt
-```
-
-Or in your [`.npmrc`](https://docs.npmjs.com/files/npmrc) file.
    
 ```
 cafile=/path/to/certificate.crt
 ```
 
 You can also provide the certificate as a string to node-sauce-connect by
-using the ca variable
+using the ca setting
 
-```shell
-npm install node-sauce-connect --ca="-----BEGIN CERTIFICATE-----\nMIID0zCCArugAwIBAgI...."
-```
-
-Or in your [`.npmrc`](https://docs.npmjs.com/files/npmrc) file.
-   
 ```
 ca="-----BEGIN CERTIFICATE-----\nMIID0zCCArugAwIBAgI...."
 ```
 
-### Non Strict SSL Mode
+### Disable Strict SSL Mode
 
-Non strict SSL environment variables are also respected, this means node-sauce-connect 
-will ignore any SSL errors that are thrown when downloading. 
+Strict SSL environment variables are also respected, this means node-sauce-connect 
+will ignore any SSL errors that are thrown when downloading when the strict-ssl 
+property is in your [`.npmrc`](https://docs.npmjs.com/files/npmrc) file. 
 
-`strict-ssl` defaults to true if not set.
-
-```shell
-npm install node-sauce-connect --strict-ssl=false
-```
-
-Or in your [`.npmrc`](https://docs.npmjs.com/files/npmrc) file.
-   
 ```
 strict-ssl=false
 ```
@@ -107,9 +89,11 @@ If installed via npm there will be a symlink placed in `node_modules/.bin`
 you can execute by placing the following in your `package.json` file.
 
 ````json
-"scripts": {
-  "test": "npm run sc && [test util]"
-  "sc": "sc [arguments]"
+{
+    "scripts": {
+      "test": "npm run sc && [test util]",
+      "sc": "sc [arguments]"
+    }
 }
 ````
 

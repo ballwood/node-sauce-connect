@@ -25,23 +25,7 @@ describe('httpsRequest.js', function () {
       request.defaults.restore();
     });
 
-    it('should set strictSSL to false if strictSSL param = false', function () {
-      httpsRequest.create('false');
-
-      expect(request.defaults).to.have.been.calledWith({
-        strictSSL: false
-      });
-    });
-
-    it('should set strictSSL to false if strictSSL param = FALSE', function () {
-      httpsRequest.create('FALSE');
-
-      expect(request.defaults).to.have.been.calledWith({
-        strictSSL: false
-      });
-    });
-
-    it('should set strictSSL to true if strictSSL param != false', function () {
+    it('should set strictSSL to true if strictSSL param != \'\'', function () {
       httpsRequest.create('true');
 
       expect(request.defaults).to.have.been.calledWith({
@@ -49,32 +33,32 @@ describe('httpsRequest.js', function () {
       });
     });
 
-    it('should set strictSSL to true if strictSSL param is blank', function () {
+    it('should set strictSSL to false if strictSSL param is blank', function () {
       httpsRequest.create('');
 
       expect(request.defaults).to.have.been.calledWith({
-        strictSSL: true
+        strictSSL: false
       });
     });
 
-    it('should set strictSSL to true if strictSSL param is undefined', function () {
+    it('should set strictSSL to false if strictSSL param is undefined', function () {
       httpsRequest.create();
 
       expect(request.defaults).to.have.been.calledWith({
-        strictSSL: true
+        strictSSL: false
       });
     });
 
-    it('should only set strictSSL to true if all params are blank strings', function () {
+    it('should only set strictSSL to false if all params are blank strings', function () {
       httpsRequest.create('', '', '');
 
       expect(request.defaults).to.have.been.calledWith({
-        strictSSL: true
+        strictSSL: false
       });
     });
 
     it('should set ca and agentOptions.ca if ca param is set', function () {
-      httpsRequest.create('', '', cert1);
+      httpsRequest.create('true', '', cert1);
 
       expect(request.defaults).to.have.been.calledWith({
         ca: cert1,
@@ -88,7 +72,7 @@ describe('httpsRequest.js', function () {
 
     it('should not modify strictSSL if ca param is set', function () {
 
-      httpsRequest.create('false', '', cert1);
+      httpsRequest.create('', '', cert1);
 
       expect(request.defaults).to.have.been.calledWith({
         ca: cert1,
@@ -106,7 +90,7 @@ describe('httpsRequest.js', function () {
 
       expect(request.defaults).to.have.been.calledWith({
         ca: cert1,
-        strictSSL: true,
+        strictSSL: false,
         agentOptions: {
           ca: cert1
         }
@@ -117,11 +101,11 @@ describe('httpsRequest.js', function () {
 
     it('should not modify strictSSL if caFile param is set', function () {
 
-      httpsRequest.create('false', crtFile);
+      httpsRequest.create('true', crtFile);
 
       expect(request.defaults).to.have.been.calledWith({
         ca: cert1,
-        strictSSL: false,
+        strictSSL: true,
         agentOptions: {
           ca: cert1
         }
@@ -131,7 +115,7 @@ describe('httpsRequest.js', function () {
 
     it('should give ca param precedence over caFile param', function () {
 
-      httpsRequest.create('', crtFile, cert2);
+      httpsRequest.create('true', crtFile, cert2);
 
       expect(request.defaults).to.have.been.calledWith({
         ca: cert2,
