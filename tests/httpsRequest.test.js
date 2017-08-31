@@ -16,6 +16,7 @@ describe('httpsRequest.js', function () {
     var crtFile2 = path.resolve(__dirname, '../acceptance/support/keys/server.crt');
     var cert1 = fs.readFileSync(crtFile, { encoding: 'utf8' });
     var cert2 = fs.readFileSync(crtFile2, { encoding: 'utf8' });
+    var cert1Newlines = cert1.replace(/\n/g, '\\n');
 
     beforeEach(function () {
       sinon.stub(request, 'defaults');
@@ -66,6 +67,58 @@ describe('httpsRequest.js', function () {
         agentOptions: {
           ca: cert1
         }
+      });
+
+    });
+
+    it('should replace \\\\n with \\n if included in ca string', function () {
+
+      httpsRequest.create('true', '', cert1Newlines);
+
+      expect(request.defaults).to.have.been.calledWith({
+        ca: cert1,
+        strictSSL: true,
+        agentOptions: {
+          ca: cert1
+        }
+      });
+
+    });
+
+    it('should replace " with blank if included in ca string', function () {
+
+      httpsRequest.create('true', '', '"' + cert1 + '"');
+
+      expect(request.defaults).to.have.been.calledWith({
+        ca: cert1,
+        strictSSL: true,
+        agentOptions: {
+          ca: cert1
+        }
+      });
+
+    });
+
+    it('should replace \' with blank if included in ca string', function () {
+
+      httpsRequest.create('true', '', '\'' + cert1 + '\'');
+
+      expect(request.defaults).to.have.been.calledWith({
+        ca: cert1,
+        strictSSL: true,
+        agentOptions: {
+          ca: cert1
+        }
+      });
+
+    });
+
+    it('should not set the ca if all the special chars have been removed', function () {
+
+      httpsRequest.create('true', '', '"');
+
+      expect(request.defaults).to.have.been.calledWith({
+        strictSSL: true
       });
 
     });
