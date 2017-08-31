@@ -12,14 +12,16 @@ echo "SSL reverse proxy started on 8081 PID: ${SSL_PROXY_PID}"
 
 export SAUCECONNECT_CDNURL=https://localhost:8081/downloads
 CA_STRING=$(awk '{printf "%s\\n", $0}' ./acceptance/support/keys/ca.crt)
-npm config set ca $CA_STRING
+
+# write to .npmrc as bash parses newlines
+echo ca=$CA_STRING >> .npmrc
 
 # install sc
 npm install
 
 unset SAUCECONNECT_CDNURL
 unset CA_STRING
-npm config rm ca
+rm .npmrc
 
 # test
 ./acceptance/tests/test.sh
