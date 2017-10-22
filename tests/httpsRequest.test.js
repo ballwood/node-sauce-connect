@@ -1,5 +1,6 @@
 var httpsRequest = require('../lib/httpsRequest');
 var request = require('request');
+
 var chai = require('chai');
 var expect = chai.expect;
 var sinon = require('sinon');
@@ -14,6 +15,7 @@ describe('httpsRequest.js', function () {
 
     var crtFile = path.resolve(__dirname, '../acceptance/support/keys/ca.crt');
     var crtFile2 = path.resolve(__dirname, '../acceptance/support/keys/server.crt');
+    var crtNotFound = path.resolve(__dirname, '../acceptance/support/keys/notfound.crt');
     var cert1 = fs.readFileSync(crtFile, { encoding: 'utf8' }).trim();
     var cert2 = fs.readFileSync(crtFile2, { encoding: 'utf8' }).trim();
     var cert1Newlines = cert1.replace(/\n/g, '\\n');
@@ -26,6 +28,7 @@ describe('httpsRequest.js', function () {
 
     beforeEach(function () {
       sinon.stub(request, 'defaults');
+      sinon.stub()
     });
 
     afterEach(function () {
@@ -101,6 +104,10 @@ describe('httpsRequest.js', function () {
 
     });
 
+    it('should throw an error if the ca string is not parseable', function () {
+      expect(httpsRequest.create.bind(null, '', '', '"""')).to.throw(Error);
+    });
+
     it('should not modify strictSSL if ca param is set', function () {
 
       httpsRequest.create('', '', cert1Env);
@@ -129,6 +136,9 @@ describe('httpsRequest.js', function () {
 
     });
 
+    it('should throw an error if the caFile does not exist', function () {
+      expect(httpsRequest.create.bind(null, '', crtNotFound)).to.throw(Error);
+    });
 
     it('should not modify strictSSL if caFile param is set', function () {
 
@@ -171,6 +181,12 @@ describe('httpsRequest.js', function () {
       });
 
     });
+
+  });
+
+  describe('wrapWithProgress', function () {
+
+    it ('should wrap the function with progress')
 
   });
 
