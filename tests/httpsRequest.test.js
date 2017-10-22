@@ -28,7 +28,6 @@ describe('httpsRequest.js', function () {
 
     beforeEach(function () {
       sinon.stub(request, 'defaults');
-      sinon.stub()
     });
 
     afterEach(function () {
