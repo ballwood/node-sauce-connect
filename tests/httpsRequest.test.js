@@ -184,10 +184,4 @@ describe('httpsRequest.js', function () {
 
   });
 
-  describe('wrapWithProgress', function () {
-
-    it ('should wrap the function with progress')
-
-  });
-
 });
