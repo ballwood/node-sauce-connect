@@ -14,9 +14,15 @@ describe('httpsRequest.js', function () {
 
     var crtFile = path.resolve(__dirname, '../acceptance/support/keys/ca.crt');
     var crtFile2 = path.resolve(__dirname, '../acceptance/support/keys/server.crt');
-    var cert1 = fs.readFileSync(crtFile, { encoding: 'utf8' });
-    var cert2 = fs.readFileSync(crtFile2, { encoding: 'utf8' });
+    var cert1 = fs.readFileSync(crtFile, { encoding: 'utf8' }).trim();
+    var cert2 = fs.readFileSync(crtFile2, { encoding: 'utf8' }).trim();
     var cert1Newlines = cert1.replace(/\n/g, '\\n');
+    var cert2Newlines = cert2.replace(/\n/g, '\\n');
+    var cert1Env = '"' + cert1Newlines + '"';
+    var cert2Env = '"' + cert2Newlines + '"';
+    var cert1Cert2Env = '"' + cert1Newlines + '\\n' + cert2Newlines + '"';
+    var cert1Parsed = JSON.parse(cert1Env).trim();
+    var cert2Parsed = JSON.parse(cert2Env).trim();
 
     beforeEach(function () {
       sinon.stub(request, 'defaults');
@@ -59,63 +65,35 @@ describe('httpsRequest.js', function () {
     });
 
     it('should set ca and agentOptions.ca if ca param is set', function () {
-      httpsRequest.create('true', '', cert1);
+      httpsRequest.create('true', '', cert1Env);
 
       expect(request.defaults).to.have.been.calledWith({
-        ca: cert1,
+        ca: [cert1Parsed],
         strictSSL: true,
         agentOptions: {
-          ca: cert1
+          ca: [cert1Parsed]
         }
       });
 
     });
 
-    it('should replace \\\\n with \\n if included in ca string', function () {
+    it('should parse string if contains double quotes', function () {
 
-      httpsRequest.create('true', '', cert1Newlines);
+      httpsRequest.create('true', '', cert1Env);
 
       expect(request.defaults).to.have.been.calledWith({
-        ca: cert1,
+        ca: [cert1Parsed],
         strictSSL: true,
         agentOptions: {
-          ca: cert1
+          ca: [cert1Parsed]
         }
       });
 
     });
 
-    it('should replace " with blank if included in ca string', function () {
+    it('should not set the ca if the value is empty string', function () {
 
-      httpsRequest.create('true', '', '"' + cert1 + '"');
-
-      expect(request.defaults).to.have.been.calledWith({
-        ca: cert1,
-        strictSSL: true,
-        agentOptions: {
-          ca: cert1
-        }
-      });
-
-    });
-
-    it('should replace \' with blank if included in ca string', function () {
-
-      httpsRequest.create('true', '', '\'' + cert1 + '\'');
-
-      expect(request.defaults).to.have.been.calledWith({
-        ca: cert1,
-        strictSSL: true,
-        agentOptions: {
-          ca: cert1
-        }
-      });
-
-    });
-
-    it('should not set the ca if all the special chars have been removed', function () {
-
-      httpsRequest.create('true', '', '"');
+      httpsRequest.create('true', '', '""');
 
       expect(request.defaults).to.have.been.calledWith({
         strictSSL: true
@@ -125,13 +103,13 @@ describe('httpsRequest.js', function () {
 
     it('should not modify strictSSL if ca param is set', function () {
 
-      httpsRequest.create('', '', cert1);
+      httpsRequest.create('', '', cert1Env);
 
       expect(request.defaults).to.have.been.calledWith({
-        ca: cert1,
+        ca: [cert1Parsed],
         strictSSL: false,
         agentOptions: {
-          ca: cert1
+          ca: [cert1Parsed]
         }
       });
 
@@ -142,10 +120,10 @@ describe('httpsRequest.js', function () {
       httpsRequest.create('', crtFile);
 
       expect(request.defaults).to.have.been.calledWith({
-        ca: cert1,
+        ca: [cert1.trim()],
         strictSSL: false,
         agentOptions: {
-          ca: cert1
+          ca: [cert1.trim()]
         }
       });
 
@@ -157,10 +135,10 @@ describe('httpsRequest.js', function () {
       httpsRequest.create('true', crtFile);
 
       expect(request.defaults).to.have.been.calledWith({
-        ca: cert1,
+        ca: [cert1Parsed],
         strictSSL: true,
         agentOptions: {
-          ca: cert1
+          ca: [cert1Parsed]
         }
       });
 
@@ -171,10 +149,24 @@ describe('httpsRequest.js', function () {
       httpsRequest.create('true', crtFile, cert2);
 
       expect(request.defaults).to.have.been.calledWith({
-        ca: cert2,
+        ca: [cert2],
         strictSSL: true,
         agentOptions: {
-          ca: cert2
+          ca: [cert2]
+        }
+      });
+
+    });
+
+    it('should load up multiple certificates', function () {
+
+      httpsRequest.create('true', '', cert1Cert2Env);
+
+      expect(request.defaults).to.have.been.calledWith({
+        ca: [cert1Parsed, cert2Parsed],
+        strictSSL: true,
+        agentOptions: {
+          ca: [cert1Parsed, cert2Parsed]
         }
       });
 
