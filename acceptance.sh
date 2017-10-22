@@ -7,5 +7,6 @@ acceptance/tests/testAuthProxy.sh &&
 acceptance/tests/testEnvVars.sh &&
 acceptance/tests/testStrictSSL.sh &&
 acceptance/tests/testCAFile.sh &&
-acceptance/tests/testCAString.sh &&
+acceptance/tests/testCAMultiFile.sh &&
+acceptance/tests/testCAString.sh
 acceptance/tests/test32.sh

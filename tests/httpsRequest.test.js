@@ -22,7 +22,7 @@ describe('httpsRequest.js', function () {
     var cert2Newlines = cert2.replace(/\n/g, '\\n');
     var cert1Env = '"' + cert1Newlines + '"';
     var cert2Env = '"' + cert2Newlines + '"';
-    var cert1Cert2Env = '"' + cert1Newlines + '\\n' + cert2Newlines + '"';
+    var cert1Cert2Env = '["' + cert1Newlines + '","' + cert2Newlines + '"]';
     var cert1Parsed = JSON.parse(cert1Env).trim();
     var cert2Parsed = JSON.parse(cert2Env).trim();
 
@@ -70,10 +70,10 @@ describe('httpsRequest.js', function () {
       httpsRequest.create('true', '', cert1Env);
 
       expect(request.defaults).to.have.been.calledWith({
-        ca: [cert1Parsed],
+        ca: cert1Parsed,
         strictSSL: true,
         agentOptions: {
-          ca: [cert1Parsed]
+          ca: cert1Parsed
         }
       });
 
@@ -84,10 +84,10 @@ describe('httpsRequest.js', function () {
       httpsRequest.create('true', '', cert1Env);
 
       expect(request.defaults).to.have.been.calledWith({
-        ca: [cert1Parsed],
+        ca: cert1Parsed,
         strictSSL: true,
         agentOptions: {
-          ca: [cert1Parsed]
+          ca: cert1Parsed
         }
       });
 
@@ -112,10 +112,10 @@ describe('httpsRequest.js', function () {
       httpsRequest.create('', '', cert1Env);
 
       expect(request.defaults).to.have.been.calledWith({
-        ca: [cert1Parsed],
+        ca: cert1Parsed,
         strictSSL: false,
         agentOptions: {
-          ca: [cert1Parsed]
+          ca: cert1Parsed
         }
       });
 
@@ -155,13 +155,13 @@ describe('httpsRequest.js', function () {
 
     it('should give ca param precedence over caFile param', function () {
 
-      httpsRequest.create('true', crtFile, cert2);
+      httpsRequest.create('true', crtFile, cert2Env);
 
       expect(request.defaults).to.have.been.calledWith({
-        ca: [cert2],
+        ca: cert2,
         strictSSL: true,
         agentOptions: {
-          ca: [cert2]
+          ca: cert2
         }
       });
 
