@@ -16,6 +16,7 @@ describe('httpsRequest.js', function () {
     var crtFile = path.resolve(__dirname, '../acceptance/support/keys/ca.crt');
     var crtFile2 = path.resolve(__dirname, '../acceptance/support/keys/server.crt');
     var crtNotFound = path.resolve(__dirname, '../acceptance/support/keys/notfound.crt');
+    var multiCa = path.resolve(__dirname, '../acceptance/support/keys/multi-ca.crt');
     var cert1 = fs.readFileSync(crtFile, { encoding: 'utf8' }).trim();
     var cert2 = fs.readFileSync(crtFile2, { encoding: 'utf8' }).trim();
     var cert1Newlines = cert1.replace(/\n/g, '\\n');
@@ -135,6 +136,20 @@ describe('httpsRequest.js', function () {
 
     });
 
+    it('should load up anything that matches the regex -----BEGIN', function () {
+
+      httpsRequest.create('', crtFile2);
+
+      expect(request.defaults).to.have.been.calledWith({
+        ca: [cert2.trim()],
+        strictSSL: false,
+        agentOptions: {
+          ca: [cert2.trim()]
+        }
+      });
+
+    });
+
     it('should throw an error if the caFile does not exist', function () {
       expect(httpsRequest.create.bind(null, '', crtNotFound)).to.throw(Error);
     });
@@ -170,6 +185,20 @@ describe('httpsRequest.js', function () {
     it('should load up multiple certificates', function () {
 
       httpsRequest.create('true', '', cert1Cert2Env);
+
+      expect(request.defaults).to.have.been.calledWith({
+        ca: [cert1Parsed, cert2Parsed],
+        strictSSL: true,
+        agentOptions: {
+          ca: [cert1Parsed, cert2Parsed]
+        }
+      });
+
+    });
+
+    it('should load up multiple certificates and remove comments', function () {
+
+      httpsRequest.create('true', multiCa, '');
 
       expect(request.defaults).to.have.been.calledWith({
         ca: [cert1Parsed, cert2Parsed],

@@ -1,6 +1,6 @@
 {
   "name": "node-sauce-connect",
-  "version": "4.4.91",
+  "version": "4.4.92",
   "keywords": [
     "saucelabs",
     "sauce-connect",
@@ -44,7 +44,7 @@
     "yaku": "^0.17.9"
   },
   "engines": {
-    "node": ">= 4"
+    "node": ">=4"
   },
   "devDependencies": {
     "chai": "^3.5.0",
