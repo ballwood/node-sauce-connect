@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/ballwood/node-sauce-connect.svg?branch=master)](https://travis-ci.org/ballwood/node-sauce-connect)
 [![Build status](https://ci.appveyor.com/api/projects/status/x11q4sv1haoubo1b/branch/master?svg=true)](https://ci.appveyor.com/project/ballwood/node-sauce-connect)
+[![Code Climate](https://api.codeclimate.com/v1/badges/9b31ff58b6cf0780e930/maintainability)](https://codeclimate.com/github/ballwood/node-sauce-connect/maintainability)
 [![npm](https://img.shields.io/npm/dt/node-sauce-connect.svg)](https://www.npmjs.com/package/node-sauce-connect)
 [![npm version](https://badge.fury.io/js/node-sauce-connect.svg)](https://badge.fury.io/js/node-sauce-connect)
 
