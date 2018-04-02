@@ -6,6 +6,8 @@
 
 # Node Sauce Connect
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ballwood/node-sauce-connect.svg)](https://greenkeeper.io/)
+
 Note
 -----------------------
 The reason for creating this package was I'm working in an enterprise environment and I wanted a 
