@@ -20,6 +20,7 @@ then
 
     # use x86 node
     export PATH=$(pwd)/node-${NVER}-linux-x86/bin:$PATH
+    export SC_ARCH=32
 
     # install packages
     npm install --ignore-scripts
@@ -32,6 +33,8 @@ then
 
     # test sc
     ./acceptance/tests/test.sh
+
+    unset SC_ARCH
 
 fi
 
