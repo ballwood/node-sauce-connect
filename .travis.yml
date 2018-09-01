@@ -19,6 +19,7 @@ addons:
     - zlib1g:i386
     - squid
     - apache2-utils
+    - jq
 
 install: 'npm install --ignore-scripts'
 script:
