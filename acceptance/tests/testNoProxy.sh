@@ -31,7 +31,4 @@ then
     unset https_proxy
     unset no_proxy
 
-    # test
-    ./acceptance/tests/test.sh
-
 fi

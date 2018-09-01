@@ -13,9 +13,6 @@ echo "Proxy started on 8080 PID: ${PROXY_PID}"
 # install sc
 npm install
 
-# test
-./acceptance/tests/test.sh
-
 # ps -p Checks if the process is still running. If it is it returns 0,
 # otherwise it returns 1
 ps -p $PROXY_PID > /dev/null
