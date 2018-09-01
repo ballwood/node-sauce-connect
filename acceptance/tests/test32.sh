@@ -31,10 +31,5 @@ then
     # install sc
     node install.js
 
-    # test sc
-    ./acceptance/tests/test.sh
-
-    unset SC_ARCH
-
 fi
 
