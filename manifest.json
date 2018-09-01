@@ -1,19 +1,19 @@
 {
   "linux": {
-    "download_url": "https://saucelabs.com/downloads/sc-4.4.12-linux.tar.gz",
-    "sha1": "3a1f9ec4fc187f73d884e6f1cc0ef2d80de43c1f"
+    "download_url": "https://saucelabs.com/downloads/sc-4.5.0-linux.tar.gz",
+    "sha1": "06e52acbbde3668a8effbf0dc970b40e32763fa6"
   },
   "linux32": {
-    "download_url": "https://saucelabs.com/downloads/sc-4.4.12-linux32.tar.gz",
-    "sha1": "d133eed8d50290313fdd053a3ad0e96a9f00645f"
+    "download_url": "https://saucelabs.com/downloads/sc-4.5.0-linux32.tar.gz",
+    "sha1": "2473df68b567098e14ac2199d14813c2be389867"
   },
   "osx": {
-    "download_url": "https://saucelabs.com/downloads/sc-4.4.12-osx.zip",
-    "sha1": "9ae0fb092dccab4eba9ce2e98fd679009a742607"
+    "download_url": "https://saucelabs.com/downloads/sc-4.5.0-osx.zip",
+    "sha1": "24913e3b442af323d62b94fbdd7ad218cec58534"
   },
-  "version": "4.4.12",
+  "version": "4.5.0",
   "win32": {
-    "download_url": "https://saucelabs.com/downloads/sc-4.4.12-win32.zip",
-    "sha1": "38c978b01b8c794e53ea88558971e36a998ec779"
+    "download_url": "https://saucelabs.com/downloads/sc-4.5.0-win32.zip",
+    "sha1": "f4668b9a4b7834c3aedf73a930695e3b9f492d06"
   }
 }
