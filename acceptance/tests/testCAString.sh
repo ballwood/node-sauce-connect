@@ -23,9 +23,6 @@ unset SAUCECONNECT_CDNURL
 unset CA_STRING
 rm .npmrc
 
-# test
-./acceptance/tests/test.sh
-
 # ps -p Checks if the process is still running. If it is it returns 0,
 # otherwise it returns 1
 ps -p $SSL_PROXY_PID > /dev/null
