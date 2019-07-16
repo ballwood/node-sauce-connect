@@ -20,6 +20,10 @@ Installing
 npm install node-sauce-connect
 ```
 
+### Authenticating with SauceLabs
+
+Currently the only way to pass authentication values is through the environment variables. SauceLabs has documentation on this best practice [here](https://wiki.saucelabs.com/display/DOCS/Best+Practice%3A+Use+Environment+Variables+for+Authentication+Credentials).
+
 ### Custom Binary Download Url
 
 To use a mirror of the Sauce Connect binaries use npm config property `sauceconnect_cdnurl`.
